@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const button = document.getElementById('deleteSelected');
     button.addEventListener('click', function() {
       // Your code to delete selected cookies
+    
       
     });
     const filterInput = document.getElementById('filterInput');
@@ -39,10 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
     //create checkbox object to filter cookies by the current domain
     thisDomainOnly.addEventListener('change', function() {
       filterCookies();
-      // calling filter cookies
-      // the function will use the var rows to query the active tab
-      // retrieve the current cookies by domain and value
-      // then populate the cookies in rows
     }); 
   }
   // Delete if you don't need it
