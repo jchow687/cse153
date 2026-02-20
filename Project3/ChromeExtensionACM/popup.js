@@ -10,8 +10,18 @@
  * - Adds a change event listener to the 'thisDomainOnly' checkbox to reload cookies based on the current domain filter.
  */
 document.addEventListener('DOMContentLoaded', function() {
-    loadCookies();
+    loadCookies(); // this is the first step where when the dom content is fully loaded
     // Your code here
+    const button = document.getElementById('deleteSelected');
+    button.addEventListener('click', function() {
+      // Your code to delete selected cookies
+      
+    });
+    const filterInput = document.getElementById('filterInput');
+    filterInput.addEventListener('input', function() {
+      filterCookies(); // this will call the filter cookies function to filter the cookies based on the user input
+    });
+
   });
   /**
  * Loads cookies and displays them in the popup.
@@ -24,7 +34,16 @@ document.addEventListener('DOMContentLoaded', function() {
  * - Calls the filterCookies function to apply any existing filter to the displayed cookies.
  */
   function loadCookies() {
-    
+    //create a checkbox variable to filter cookies by the current domain
+    const thisDomainOnly = document.getElementById('thisDomainOnly');
+    //create checkbox object to filter cookies by the current domain
+    thisDomainOnly.addEventListener('change', function() {
+      filterCookies();
+      // calling filter cookies
+      // the function will use the var rows to query the active tab
+      // retrieve the current cookies by domain and value
+      // then populate the cookies in rows
+    }); 
   }
   // Delete if you don't need it
   function filterCookies() {
