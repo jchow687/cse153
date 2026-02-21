@@ -1,45 +1,73 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>Advanced Cookie Manager</title>
-  <style>
-    body { font-family: Arial, sans-serif; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; width: 70px; word-break: break-all; }
-    th { background-color: #f2f2f2; }
-    button, input[type="checkbox"] { margin-top: 10px; }
-    input[type="text"] { margin-bottom: 10px; }
-  </style>
-</head>
-<body>
-  <h1>Cookie Manager</h1>
+  <head>
+    <title>Advanced Cookie Manager</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        width: 70px;
+        word-break: break-all;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      button,
+      input[type="checkbox"] {
+        margin-top: 10px;
+      }
+      input[type="text"] {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cookie Manager</h1>
 
-  <div class="row">
-    <label>
-      <input type="checkbox" id="thisDomainOnly">
-      This domain only
-    </label>
-  </div>
+    <div class="row">
+      <label>
+        <input type="checkbox" id="thisDomainOnly" />
+        This domain only
+      </label>
+    </div>
 
-  <div class="row">
-    <input type="text" id="filterInput" placeholder="cookie filter: Name | Value | Domain">
-    <button id="refreshButton">Refresh Cookies</button>
-  </div>
+    <div class="row">
+      <input
+        type="text"
+        id="filterInput"
+        placeholder="cookie filter: Name | Value | Domain"
+      />
+      <button id="refreshButton">Refresh Cookies</button>
+    </div>
 
-  <table id="cookieList">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Value</th>
-        <th>Domain</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody id="cookieListBody">
-      <!-- Cookies will be populated here by popup.js -->
-    </tbody>
-  </table>
+    <div class="row">
+      <button id="deleteSelected">Delete Selected</button>
+    </div>
 
-  <script src="popup.js"></script>
-</body>
+    <table id="cookieList">
+      <thead>
+        <tr>
+          <th>Select</th>
+          <th>Name</th>
+          <th>Value</th>
+          <th>Domain</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="cookieListBody">
+        <!-- Cookies will be populated here by popup.js -->
+      </tbody>
+    </table>
+
+    <script src="popup.js"></script>
+  </body>
 </html>
