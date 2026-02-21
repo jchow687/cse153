@@ -56,7 +56,17 @@ document.addEventListener('DOMContentLoaded', function() {
  */
   function loadCookies() {
     //create a checkbox variable to filter cookies by the current domain
- 
+    const domCheckbox = document.getElementById('thisDomainOnly');
+    if (domCheckbox && domCheckbox.checked){
+      alert("cookies have been filtered on current domain");
+    }
+    //query the active tab to get the current domain
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const activeTab = tabs[0];
+      const url = new URL(activeTab.url);
+      const domain = url.hostname;
+      console.log("current domain: " + domain);
+    });
   }
   // Delete if you don't need it
   function filterCookies() {
