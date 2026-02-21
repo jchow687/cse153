@@ -10,42 +10,39 @@
  * - Adds a change event listener to the 'thisDomainOnly' checkbox to reload cookies based on the current domain filter. //Task 3
  */
 document.addEventListener('DOMContentLoaded', function() {
-    
   const thisDomainOnly = document.getElementById('thisDomainOnly');
-    //create checkbox object to filter cookies by the current domain
+  if (thisDomainOnly) {
     thisDomainOnly.addEventListener('change', function() {
       filterCookies();
     });
+  }
 
-  deleteBtn.addEventListener('click', function () {
-    // for the protocol: Secure cookies can only be removed using an https://
-    const protocol = cookie.secure ? 'http://' : 'http:// ';
+  const deleteBtn = document.getElementById('deleteSelected');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', function () {
+    const protocol = cookie.secure ? 'https://' : 'http://';
     let host = cookie.domain;
+    if (host.startsWith('.')) host = host.slice(1);
 
-    //If the domain starts with '.', remove it. Otherwise leave it alone.
-    if (host.startsWith('.')) {
-      host = host.slice(1);
-    }    
     const url = protocol + host + cookie.path;
 
-    // from chrome extension api doc
-    chrome.cookies.remove({
-      url: url,
-      name: cookie.name
-    }, function () {
+    chrome.cookies.remove({ url, name: cookie.name }, () => loadCookies());
+    });
+  }
+
+  const filterInput = document.getElementById('filterInput');
+  if (filterInput) {
+    filterInput.addEventListener('input', function() {
+      filterCookies();
+    });
+  }
+
+  const refreshButton = document.getElementById('refreshButton');
+  if (refreshButton) {
+    refreshButton.addEventListener('click', function() {
       loadCookies();
     });
-  });
-  
-  const filterInput = document.getElementById('filterInput');
-  filterInput.addEventListener('input', function() {
-    filterCookies(); // this will call the filter cookies function to filter the cookies based on the user input
-  });
-  
-  const refreshButton = document.getElementById('refreshButton');
-  refreshButton.addEventListener('click', function() {
-    loadCookies(); // this will call the load cookies function to reload the cookies when the refresh button is clicked
-  });
+  }
 });
   /**
  * Loads cookies and displays them in the popup.

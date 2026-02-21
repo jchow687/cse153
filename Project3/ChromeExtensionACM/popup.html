@@ -17,7 +17,7 @@
   
   <h1>Cookie Manager</h1>
   <div class="row">
-  <label for="thisDomainOnly">
+  <label>
     <input type="checkbox" id="thisDomainOnly">
     <button id="deleteSelected">This domain only</button>
   </label>
@@ -28,19 +28,15 @@
     <button id="refreshButton">Refresh Cookies</button>
   </div class="row">
 
-  <table id="cookieTable">
+  <table id="cookieList">
     <thead>
       <tr>
         <th>Name</th>
         <th>Value</th>
         <th>Domain</th>
-        <th>Path</th>
-        <th>Secure</th>
-        <th>HttpOnly</th>
-        <th>Actions</th>
       </tr>
     </thead>
-    <tbody id="cookieTableBody">
+    <tbody id="cookieListBody">
       <!-- Cookies will be populated here by popup.js -->
     </tbody>
 
