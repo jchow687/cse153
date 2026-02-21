@@ -35,13 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
       loadCookies();
     });
   }
-  //uhh do i do need this?? LOL
-  const refreshButton = document.getElementById('refreshButton');
-  if (refreshButton) {
-    refreshButton.addEventListener('click', function() {
-      loadCookies();
-    });
-  }
 });
 
 /**
