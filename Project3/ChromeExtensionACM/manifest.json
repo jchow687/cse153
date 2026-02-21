@@ -1,16 +1,11 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Cookie Manager",
   "version": "1.0",
   "description": "Provides advanced cookie management features like automatic deletion, whitelisting, and real-time modification.",
-  "permissions": [
-    "cookies",
-    "storage",
-    "activeTab",
-    "http://*/*",
-    "https://*/*"
-  ],
-  "browser_action": {
+  "permissions": ["cookies", "activeTab", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
@@ -19,12 +14,7 @@
     }
   },
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
-  "options_page": "options.html",
-  "applications": {
-    "gecko": {
-      "id": "ext@example.org"
-    }
-  }
+  "options_page": "options.html"
 }
