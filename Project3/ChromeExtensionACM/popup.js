@@ -4,26 +4,43 @@
  * Event listener for DOMContentLoaded event.
  * 
  * This function initializes the popup by loading cookies and setting up event listeners for various elements:
- * - Loads cookies when the DOM content is fully loaded.
- * - Adds a click event listener to the 'deleteSelected' button to delete selected cookies.
- * - Adds an input event listener to the 'filterInput' element to filter cookies based on user input.
- * - Adds a change event listener to the 'thisDomainOnly' checkbox to reload cookies based on the current domain filter.
+ * - Loads cookies when the DOM content is fully loaded. // Task 1
+ * - Adds a click event listener to the 'deleteSelected' button to delete selected cookies. // Task 2
+ * - Adds an input event listener to the 'filterInput' element to filter cookies based on user input. // Task 3
+ * - Adds a change event listener to the 'thisDomainOnly' checkbox to reload cookies based on the current domain filter. //Task 3
  */
 document.addEventListener('DOMContentLoaded', function() {
-    loadCookies(); // this is the first step where when the dom content is fully loaded
-    // Your code here
-    const button = document.getElementById('deleteSelected');
-    button.addEventListener('click', function() {
-      // Your code to delete selected cookies
     
-      
-    });
-    const filterInput = document.getElementById('filterInput');
-    filterInput.addEventListener('input', function() {
-      filterCookies(); // this will call the filter cookies function to filter the cookies based on the user input
+  const thisDomainOnly = document.getElementById('thisDomainOnly');
+    //create checkbox object to filter cookies by the current domain
+    thisDomainOnly.addEventListener('change', function() {
+      filterCookies();
     });
 
+  deleteBtn.addEventListener('click', function () {
+    const protocol = cookie.secure ? 'http://*/*' : 'http://*/* ';
+    const host = cookie.domain.startsWith('.') ? cookie.domain.slice(1) : cookie.domain;
+    const url = protocol + host + cookie.path;
+
+    chrome.cookies.remove({
+      url: url,
+      name: cookie.name
+    }, function () {
+      loadCookies();
+    });
   });
+  
+  const filterInput = document.getElementById('filterInput');
+  filterInput.addEventListener('input', function() {
+    filterCookies(); // this will call the filter cookies function to filter the cookies based on the user input
+  });
+  
+  const refreshButton = document.getElementById('refreshButton');
+  refreshButton.addEventListener('click', function() {
+    loadCookies(); // this will call the load cookies function to reload the cookies when the refresh button is clicked
+
+  });
+});
   /**
  * Loads cookies and displays them in the popup.
  * 
@@ -36,11 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
  */
   function loadCookies() {
     //create a checkbox variable to filter cookies by the current domain
-    const thisDomainOnly = document.getElementById('thisDomainOnly');
-    //create checkbox object to filter cookies by the current domain
-    thisDomainOnly.addEventListener('change', function() {
-      filterCookies();
-    }); 
+ 
   }
   // Delete if you don't need it
   function filterCookies() {
