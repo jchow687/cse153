@@ -1,5 +1,5 @@
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("Advanced Cookie Manager installed.");
+    console.log("Cookie Manager installed.");
   });
   
   chrome.cookies.onChanged.addListener((changeInfo) => {
