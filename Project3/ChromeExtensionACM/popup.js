@@ -85,7 +85,7 @@ function loadCookies() {
       if (thisDomainOnly) {
         filteredCookies = cookies.filter(function(cookie) {
           const cookieDomain = cookie.domain.startsWith('.') ? cookie.domain.slice(1) : cookie.domain;
-          return cookieDomain == domain || cookieDomain.endsWith('.' + domain);
+          return cookieDomain === domain || domain.endsWith('.' + cookieDomain);
         });
       }
 
