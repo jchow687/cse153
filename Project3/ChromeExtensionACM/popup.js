@@ -43,6 +43,12 @@ document.addEventListener('DOMContentLoaded', function() {
  * - Populates the cookie list table with the retrieved cookies.
  * - Calls the filterCookies function to apply any existing filter to the displayed cookies.
  */
+
+/**
+ * Sources:
+ * https://stackoverflow.com/questions/54821584/chrome-extension-code-to-get-current-active-tab-url-and-detect-any-url-update-in#:~:text=ios%20azure%20docker-,chrome%20extension%20code%20to%20get%20current%20active%20tab%20url%20and,update%20in%20it%20as%20well&text=chrome.,should%20I%20change%20my%20code?
+ * https://developer.chrome.com/docs/extensions/reference/cookies/#method-getAll
+ */
 function loadCookies() {
   const domCheckbox = document.getElementById('thisDomainOnly');
   const thisDomainOnly = domCheckbox ? domCheckbox.checked : false;
@@ -116,7 +122,7 @@ function loadCookies() {
     });
   });
 }
-
+W
 // Delete if you don't need it
 function filterCookies() {
   const filterValue = document.getElementById('filterInput').value.toLowerCase();
