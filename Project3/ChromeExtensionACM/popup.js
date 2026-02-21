@@ -18,10 +18,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
   deleteBtn.addEventListener('click', function () {
-    const protocol = cookie.secure ? 'http://*/*' : 'http://*/* ';
-    const host = cookie.domain.startsWith('.') ? cookie.domain.slice(1) : cookie.domain;
+    // for the protocol: Secure cookies can only be removed using an https://
+    const protocol = cookie.secure ? 'http://' : 'http:// ';
+    let host = cookie.domain;
+
+    //If the domain starts with '.', remove it. Otherwise leave it alone.
+    if (host.startsWith('.')) {
+      host = host.slice(1);
+    }    
     const url = protocol + host + cookie.path;
 
+    // from chrome extension api doc
     chrome.cookies.remove({
       url: url,
       name: cookie.name
@@ -38,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const refreshButton = document.getElementById('refreshButton');
   refreshButton.addEventListener('click', function() {
     loadCookies(); // this will call the load cookies function to reload the cookies when the refresh button is clicked
-
   });
 });
   /**
