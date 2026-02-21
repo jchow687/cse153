@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Delete if you don't need it
   function filterCookies() {
     const filterValue = document.getElementById('filterInput').value.toLowerCase();
-    const rows = document.querySelectorAll('#cookieList tr');
+    const rows = document.querySelectorAll('#cookieListBody tr');
     rows.forEach((row) => {
       const cells = row.querySelectorAll('td');
       const cookieName = cells[1].textContent.toLowerCase();
