@@ -35,6 +35,39 @@ document.addEventListener('DOMContentLoaded', function() {
       loadCookies();
     });
   }
+
+  const selectAllButton = document.getElementById('selectAll');
+  if (selectAllButton) {
+    selectAllButton.addEventListener('click', function() {
+      const checkboxes = document.querySelectorAll('#cookieListBody input[type="checkbox"]');
+      for (let i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = true;
+      }
+    });
+  }
+
+  const unselectAllButton = document.getElementById('unselectAll');
+  if (unselectAllButton) {
+    unselectAllButton.addEventListener('click', function() {
+      const checkboxes = document.querySelectorAll('#cookieListBody input[type="checkbox"]');
+      for (let i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = false;
+      }
+    });
+  }
+
+  const deleteAllButton = document.getElementById('deleteAllButton');
+  if (deleteAllButton) {
+    deleteAllButton.addEventListener('click', function() {
+      if (confirm('Are you sure you want to delete all cookies?')) {
+        const checkboxes = document.querySelectorAll('#cookieListBody input[type="checkbox"]');
+        for (let i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = true;
+        }
+        deleteSelected();
+      }
+    });
+  }
 });
 
 /**

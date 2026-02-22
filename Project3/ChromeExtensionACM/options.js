@@ -35,8 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
           return domain.length > 0;
         });
 
-      chrome.storage.sync.set({ whitelist: domains }, function() {});
+      chrome.storage.sync.set({ whitelist: domains }, function() {
         alert('Whitelist saved!');
       });
-  };
+    });
+  }
 });
