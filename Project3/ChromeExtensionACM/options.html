@@ -27,20 +27,36 @@
         padding: 10px 20px;
         cursor: pointer;
       }
+      #saveMessage {
+        display: none;
+        margin-top: 10px;
+        color: green;
+      }
+      #whitelistList {
+        margin-top: 20px;
+        text-decoration: underline;
+      }
+      .remove-button {
+        margin-left: 10px;
+      }
     </style>
   </head>
   <body>
     <h1>Cookie Manager Options</h1>
 
     <form id="whitelistForm">
-      <label for="whitelist">Whitelisted Domains (comma-separated):</label>
+      <label for="whitelistInput">Whitelisted Domains (comma-separated):</label>
       <input
         type="text"
-        id="whitelist"
+        id="whitelistInput"
         placeholder="example.com, google.com, amazon.com"
       />
       <button type="submit">Save Whitelist</button>
     </form>
+
+    <div id="saveMessage">Whitelist Saved</div>
+
+    <ul id="whitelistList"></ul>
 
     <script src="options.js"></script>
   </body>

@@ -14,12 +14,50 @@
  */
 document.addEventListener('DOMContentLoaded', function() {
   const whitelistForm = document.getElementById('whitelistForm');
-  const whitelistInput = document.getElementById('whitelist');
+  const whitelistInput = document.getElementById('whitelistInput');
+  const saveMessage = document.getElementById('saveMessage');
+  const whitelistList = document.getElementById('whitelistList');
+
+  function displayWhitelist() {
+    chrome.storage.sync.get(['whitelist'], function(result) {
+      whitelistList.innerHTML = '';
+      if (result.whitelist && Array.isArray(result.whitelist)) {
+        result.whitelist.forEach(function(domain) {
+          const li = document.createElement('li');
+          li.textContent = domain;
+
+          const removeButton = document.createElement('button');
+          removeButton.textContent = 'Remove';
+          removeButton.className = 'remove-button';
+          removeButton.addEventListener('click', function() {
+            removeDomain(domain);
+          });
+
+          li.appendChild(removeButton);
+          whitelistList.appendChild(li);
+        });
+      }
+    });
+  }
+
+  function removeDomain(domainToRemove) {
+    chrome.storage.sync.get(['whitelist'], function(result) {
+      let whitelist = result.whitelist || [];
+      whitelist = whitelist.filter(function(domain) {
+        return domain !== domainToRemove;
+      });
+      chrome.storage.sync.set({ whitelist: whitelist }, function() {
+        whitelistInput.value = whitelist.join(', ');
+        displayWhitelist();
+      });
+    });
+  }
 
   chrome.storage.sync.get(['whitelist'], function(result) {
     if (result.whitelist && Array.isArray(result.whitelist)) {
       whitelistInput.value = result.whitelist.join(', ');
     }
+    displayWhitelist();
   });
 
   if (whitelistForm) {
@@ -36,7 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
       chrome.storage.sync.set({ whitelist: domains }, function() {
-        alert('Whitelist saved!');
+        saveMessage.style.display = 'block';
+        displayWhitelist();
+        setTimeout(function() {
+          saveMessage.style.display = 'none';
+        }, 2000);
       });
     });
   }
