@@ -53,13 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  chrome.storage.sync.get(['whitelist'], function(result) {
-    if (result.whitelist && Array.isArray(result.whitelist)) {
-      whitelistInput.value = result.whitelist.join(', ');
-    }
-    displayWhitelist();
-  });
-
   if (whitelistForm) {
     whitelistForm.addEventListener('submit', function(event) {
       event.preventDefault();
