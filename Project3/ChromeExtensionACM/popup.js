@@ -124,7 +124,7 @@ function loadCookies() {
       if (thisDomainOnly) {
         filteredCookies = cookies.filter(function(cookie) {
           const cookieDomain = cookie.domain.startsWith('.') ? cookie.domain.slice(1) : cookie.domain;
-          return cookieDomain === domain || domain.endsWith('.' + cookieDomain);
+          return domain === cookieDomain || domain.endsWith('.' + cookieDomain);
         });
       }
 
