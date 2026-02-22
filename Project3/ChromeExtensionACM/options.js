@@ -20,12 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function displayWhitelist() {
     chrome.storage.sync.get(['whitelist'], function(result) {
-      console.log('displayWhitelist called, result:', result);
       whitelistList.innerHTML = '';
       if (result.whitelist && Array.isArray(result.whitelist)) {
-        console.log('Whitelist is an array with', result.whitelist.length, 'items');
         result.whitelist.forEach(function(domain) {
-          console.log('Creating li for domain:', domain);
           const li = document.createElement('li');
           li.textContent = domain;
 
@@ -38,11 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           li.appendChild(removeButton);
           whitelistList.appendChild(li);
-          console.log('Appended li to whitelistList');
         });
-        console.log('Finished iterating, whitelistList children:', whitelistList.children.length);
-      } else {
-        console.log('Whitelist is not an array or is empty');
       }
     });
   }
@@ -72,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
       event.preventDefault();
 
       const inputValue = whitelistInput.value;
-      console.log('Form submitted with input:', inputValue);
       const newDomains = inputValue.split(',')
         .map(function(domain) {
           return domain.trim();
@@ -80,11 +72,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .filter(function(domain) {
           return domain.length > 0;
         });
-      console.log('Parsed new domains:', newDomains);
 
       // Get existing whitelist and append new domains
       chrome.storage.sync.get(['whitelist'], function(result) {
-        console.log('Existing whitelist from storage:', result);
         let existingWhitelist = result.whitelist || [];
 
         // Add new domains that don't already exist
@@ -93,10 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
             existingWhitelist.push(domain);
           }
         });
-        console.log('Updated whitelist to save:', existingWhitelist);
 
         chrome.storage.sync.set({ whitelist: existingWhitelist }, function() {
-          console.log('Saved to storage');
           whitelistInput.value = '';
           saveMessage.style.display = 'block';
           displayWhitelist();
