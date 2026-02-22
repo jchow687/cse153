@@ -106,7 +106,17 @@ function loadCookies() {
 
       console.log('User whitelist:', whitelist);
 
-      if (whitelist.includes(domain)) {
+      const lowerDomain = domain.toLowerCase();
+      const normalizedWhitelist = whitelist.map(function(d) {
+        return d.toLowerCase();
+      });
+
+      const isWhitelisted = normalizedWhitelist.some(function(whitelistedDomain) {
+        return lowerDomain === whitelistedDomain ||
+               lowerDomain.endsWith('.' + whitelistedDomain);
+      });
+
+      if (isWhitelisted) {
         console.log('Domain is in whitelist, blocking access:', domain);
         const row = document.createElement('tr');
         row.innerHTML = '<td colspan="5">Cannot access cookies on this page.</td>';
@@ -124,7 +134,9 @@ function loadCookies() {
       if (thisDomainOnly) {
         filteredCookies = cookies.filter(function(cookie) {
           const cookieDomain = cookie.domain.startsWith('.') ? cookie.domain.slice(1) : cookie.domain;
-          return domain === cookieDomain || domain.endsWith('.' + cookieDomain);
+          const lowerCookieDomain = cookieDomain.toLowerCase();
+          const lowerDomain = domain.toLowerCase();
+          return lowerDomain === lowerCookieDomain || lowerDomain.endsWith('.' + lowerCookieDomain);
         });
       }
 
