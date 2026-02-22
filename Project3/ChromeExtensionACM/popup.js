@@ -55,19 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-
-  const deleteAllButton = document.getElementById('deleteAllButton');
-  if (deleteAllButton) {
-    deleteAllButton.addEventListener('click', function() {
-      if (confirm('Are you sure you want to delete all cookies?')) {
-        const checkboxes = document.querySelectorAll('#cookieListBody input[type="checkbox"]');
-        for (let i = 0; i < checkboxes.length; i++) {
-          checkboxes[i].checked = true;
-        }
-        deleteSelected();
-      }
-    });
-  }
 });
 
 /**
