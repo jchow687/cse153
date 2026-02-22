@@ -55,6 +55,13 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
+  const optionsButton = document.getElementById('optionsButton');
+  if (optionsButton) {
+    optionsButton.addEventListener('click', function() {
+      chrome.runtime.openOptionsPage();
+    });
+  }
 });
 
 /**

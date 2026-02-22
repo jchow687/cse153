@@ -1,48 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>Cookie Manager Options</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    h1 {
-      margin-bottom: 20px;
-    }
-    form {
-      margin-top: 20px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      box-sizing: border-box;
-    }
-    button {
-      padding: 10px 20px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <h1>Cookie Manager Options</h1>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      h1 {
+        margin-bottom: 20px;
+      }
+      form {
+        margin-top: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cookie Manager Options</h1>
 
-  <form id="whitelistForm">
-    <label for="whitelist">Whitelisted Domains (comma-separated):</label>
-    <input
-      type="text"
-      id="whitelist"
-      placeholder="example.com, google.com, amazon.com"
-    />
-    <button type="submit">Save Whitelist</button>
-  </form>
+    <form id="whitelistForm">
+      <label for="whitelist">Whitelisted Domains (comma-separated):</label>
+      <input
+        type="text"
+        id="whitelist"
+        placeholder="example.com, google.com, amazon.com"
+      />
+      <button type="submit">Save Whitelist</button>
+    </form>
 
-  <script src="options.js"></script>
-</body>
+    <script src="options.js"></script>
+  </body>
 </html>
