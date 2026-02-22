@@ -89,7 +89,7 @@ function loadCookies() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const activeTab = tabs[0];
 
-    if (!activeTab || !activeTab.url || activeTab.url.startsWith('chrome://')) {
+    if (!activeTab || !activeTab.url) {
       const row = document.createElement('tr');
       row.innerHTML = '<td colspan="5">Cannot access cookies on this page</td>';
       cookieListBody.appendChild(row);
@@ -98,6 +98,25 @@ function loadCookies() {
 
     const url = new URL(activeTab.url);
     const domain = url.hostname;
+
+    console.log('Current domain:', domain);
+
+    chrome.storage.sync.get(['whitelist'], function(result) {
+      const whitelist = result.whitelist || [];
+
+      console.log('User whitelist:', whitelist);
+
+      if (whitelist.includes(domain)) {
+        console.log('Domain is in whitelist, blocking access:', domain);
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="5">Cannot access cookies on this page.</td>';
+        cookieListBody.appendChild(row);
+        return;
+      }
+
+      console.log('Domain not in whitelist, loading cookies...');
+
+
 
     chrome.cookies.getAll({}, function(cookies) {
       let filteredCookies = cookies;
@@ -152,6 +171,7 @@ function loadCookies() {
       }
 
       filterCookies();
+    });
     });
   });
 }
