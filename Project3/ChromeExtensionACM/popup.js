@@ -101,90 +101,102 @@ function loadCookies() {
 
     console.log('Current domain:', domain);
 
-    chrome.storage.sync.get(['whitelist'], function(result) {
-      const whitelist = result.whitelist || [];
+    // Default: show current domain cookies; when checkbox is checked, show all cookies
+    if (thisDomainOnly) {
+      // Show all cookies in the browser
+      chrome.cookies.getAll({}, function(cookies) {
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i];
+          const row = document.createElement('tr');
 
-      console.log('User whitelist:', whitelist);
+          // Checkbox cell for deleteSelected
+          const checkboxCell = document.createElement('td');
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.dataset.name = cookie.name;
+          checkbox.dataset.domain = cookie.domain;
+          checkbox.dataset.path = cookie.path;
+          checkbox.dataset.secure = cookie.secure;
+          checkboxCell.appendChild(checkbox);
+          row.appendChild(checkboxCell);
 
-      const lowerDomain = domain.toLowerCase();
-      const normalizedWhitelist = whitelist.map(function(d) {
-        return d.toLowerCase();
+          const nameCell = document.createElement('td');
+          nameCell.textContent = cookie.name;
+
+          const valueCell = document.createElement('td');
+          valueCell.textContent = cookie.value;
+
+          const domainCell = document.createElement('td');
+          domainCell.textContent = cookie.domain;
+
+          const actionsCell = document.createElement('td');
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = 'Delete';
+
+          deleteBtn.addEventListener('click', function() {
+            deleteCookie(cookie);
+          });
+
+          actionsCell.appendChild(deleteBtn);
+
+          row.appendChild(nameCell);
+          row.appendChild(valueCell);
+          row.appendChild(domainCell);
+          row.appendChild(actionsCell);
+
+          cookieListBody.appendChild(row);
+        }
+
+        filterCookies();
       });
+    } else {
+      // Show only cookies for the current domain
+      chrome.cookies.getAll({ url: activeTab.url }, function(cookies) {
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i];
+          const row = document.createElement('tr');
 
-      const isWhitelisted = normalizedWhitelist.some(function(whitelistedDomain) {
-        return lowerDomain === whitelistedDomain ||
-               lowerDomain.endsWith('.' + whitelistedDomain);
+          // Checkbox cell for deleteSelected
+          const checkboxCell = document.createElement('td');
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.dataset.name = cookie.name;
+          checkbox.dataset.domain = cookie.domain;
+          checkbox.dataset.path = cookie.path;
+          checkbox.dataset.secure = cookie.secure;
+          checkboxCell.appendChild(checkbox);
+          row.appendChild(checkboxCell);
+
+          const nameCell = document.createElement('td');
+          nameCell.textContent = cookie.name;
+
+          const valueCell = document.createElement('td');
+          valueCell.textContent = cookie.value;
+
+          const domainCell = document.createElement('td');
+          domainCell.textContent = cookie.domain;
+
+          const actionsCell = document.createElement('td');
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = 'Delete';
+
+          deleteBtn.addEventListener('click', function() {
+            deleteCookie(cookie);
+          });
+
+          actionsCell.appendChild(deleteBtn);
+
+          row.appendChild(nameCell);
+          row.appendChild(valueCell);
+          row.appendChild(domainCell);
+          row.appendChild(actionsCell);
+
+          cookieListBody.appendChild(row);
+        }
+
+        filterCookies();
       });
-
-      if (isWhitelisted) {
-        console.log('Domain is in whitelist, blocking access:', domain);
-        const row = document.createElement('tr');
-        row.innerHTML = '<td colspan="5">Cannot access cookies on this page.</td>';
-        cookieListBody.appendChild(row);
-        return;
-      }
-
-      console.log('Domain not in whitelist, loading cookies...');
-
-
-
-    chrome.cookies.getAll({}, function(cookies) {
-      let filteredCookies = cookies;
-
-      if (thisDomainOnly) {
-        filteredCookies = cookies.filter(function(cookie) {
-          const cookieDomain = cookie.domain.startsWith('.') ? cookie.domain.slice(1) : cookie.domain;
-          const lowerCookieDomain = cookieDomain.toLowerCase();
-          const lowerDomain = domain.toLowerCase();
-          return lowerDomain === lowerCookieDomain || lowerDomain.endsWith('.' + lowerCookieDomain);
-        });
-      }
-
-      for (let i = 0; i < filteredCookies.length; i++) {
-        const cookie = filteredCookies[i];
-        const row = document.createElement('tr');
-
-        // Checkbox cell for deleteSelected
-        const checkboxCell = document.createElement('td');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.dataset.name = cookie.name;
-        checkbox.dataset.domain = cookie.domain;
-        checkbox.dataset.path = cookie.path;
-        checkbox.dataset.secure = cookie.secure;
-        checkboxCell.appendChild(checkbox);
-        row.appendChild(checkboxCell);
-
-        const nameCell = document.createElement('td');
-        nameCell.textContent = cookie.name;
-
-        const valueCell = document.createElement('td');
-        valueCell.textContent = cookie.value;
-
-        const domainCell = document.createElement('td');
-        domainCell.textContent = cookie.domain;
-
-        const actionsCell = document.createElement('td');
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-
-        deleteBtn.addEventListener('click', function() {
-          deleteCookie(cookie);
-        });
-
-        actionsCell.appendChild(deleteBtn);
-
-        row.appendChild(nameCell);
-        row.appendChild(valueCell);
-        row.appendChild(domainCell);
-        row.appendChild(actionsCell);
-
-        cookieListBody.appendChild(row);
-      }
-
-      filterCookies();
-    });
-    });
+    }
   });
 }
 
