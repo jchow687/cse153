@@ -107,44 +107,7 @@ function loadCookies() {
       chrome.cookies.getAll({}, function(cookies) {
         for (let i = 0; i < cookies.length; i++) {
           const cookie = cookies[i];
-          const row = document.createElement('tr');
-
-          // Checkbox cell for deleteSelected
-          const checkboxCell = document.createElement('td');
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.dataset.name = cookie.name;
-          checkbox.dataset.domain = cookie.domain;
-          checkbox.dataset.path = cookie.path;
-          checkbox.dataset.secure = cookie.secure;
-          checkboxCell.appendChild(checkbox);
-          row.appendChild(checkboxCell);
-
-          const nameCell = document.createElement('td');
-          nameCell.textContent = cookie.name;
-
-          const valueCell = document.createElement('td');
-          valueCell.textContent = cookie.value;
-
-          const domainCell = document.createElement('td');
-          domainCell.textContent = cookie.domain;
-
-          const actionsCell = document.createElement('td');
-          const deleteBtn = document.createElement('button');
-          deleteBtn.textContent = 'Delete';
-
-          deleteBtn.addEventListener('click', function() {
-            deleteCookie(cookie);
-          });
-
-          actionsCell.appendChild(deleteBtn);
-
-          row.appendChild(nameCell);
-          row.appendChild(valueCell);
-          row.appendChild(domainCell);
-          row.appendChild(actionsCell);
-
-          cookieListBody.appendChild(row);
+          createCookieRow(cookie, cookieListBody);
         }
 
         filterCookies();
@@ -154,50 +117,172 @@ function loadCookies() {
       chrome.cookies.getAll({ url: activeTab.url }, function(cookies) {
         for (let i = 0; i < cookies.length; i++) {
           const cookie = cookies[i];
-          const row = document.createElement('tr');
-
-          // Checkbox cell for deleteSelected
-          const checkboxCell = document.createElement('td');
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.dataset.name = cookie.name;
-          checkbox.dataset.domain = cookie.domain;
-          checkbox.dataset.path = cookie.path;
-          checkbox.dataset.secure = cookie.secure;
-          checkboxCell.appendChild(checkbox);
-          row.appendChild(checkboxCell);
-
-          const nameCell = document.createElement('td');
-          nameCell.textContent = cookie.name;
-
-          const valueCell = document.createElement('td');
-          valueCell.textContent = cookie.value;
-
-          const domainCell = document.createElement('td');
-          domainCell.textContent = cookie.domain;
-
-          const actionsCell = document.createElement('td');
-          const deleteBtn = document.createElement('button');
-          deleteBtn.textContent = 'Delete';
-
-          deleteBtn.addEventListener('click', function() {
-            deleteCookie(cookie);
-          });
-
-          actionsCell.appendChild(deleteBtn);
-
-          row.appendChild(nameCell);
-          row.appendChild(valueCell);
-          row.appendChild(domainCell);
-          row.appendChild(actionsCell);
-
-          cookieListBody.appendChild(row);
+          createCookieRow(cookie, cookieListBody);
         }
 
         filterCookies();
       });
     }
   });
+}
+
+function createCookieRow(cookie, cookieListBody) {
+  const row = document.createElement('tr');
+
+  // Checkbox cell for deleteSelected
+  const checkboxCell = document.createElement('td');
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.dataset.name = cookie.name;
+  checkbox.dataset.domain = cookie.domain;
+  checkbox.dataset.path = cookie.path;
+  checkbox.dataset.secure = cookie.secure;
+  checkboxCell.appendChild(checkbox);
+  row.appendChild(checkboxCell);
+
+  const nameCell = document.createElement('td');
+  nameCell.textContent = cookie.name;
+  row.appendChild(nameCell);
+
+  const valueCell = document.createElement('td');
+  valueCell.textContent = cookie.value;
+  row.appendChild(valueCell);
+
+  const domainCell = document.createElement('td');
+  domainCell.textContent = cookie.domain;
+  row.appendChild(domainCell);
+
+  const actionsCell = document.createElement('td');
+
+  // Delete button
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = 'Delete';
+  deleteBtn.addEventListener('click', function() {
+    deleteCookie(cookie);
+  });
+  actionsCell.appendChild(deleteBtn);
+
+  // Edit button
+  const editBtn = document.createElement('button');
+  editBtn.textContent = 'Edit';
+  editBtn.addEventListener('click', function() {
+    startEditing(cookie, row, valueCell, actionsCell);
+  });
+  actionsCell.appendChild(editBtn);
+
+  row.appendChild(actionsCell);
+  cookieListBody.appendChild(row);
+}
+
+function startEditing(cookie, row, valueCell, actionsCell) {
+  // Store the original value for cancel
+  const originalValue = cookie.value;
+
+  // Replace value cell with input
+  valueCell.innerHTML = '';
+  const valueInput = document.createElement('input');
+  valueInput.type = 'text';
+  valueInput.value = originalValue;
+  valueCell.appendChild(valueInput);
+
+  // Clear actions cell and add Save/Cancel buttons
+  actionsCell.innerHTML = '';
+
+  const saveBtn = document.createElement('button');
+  saveBtn.textContent = 'Save';
+  saveBtn.addEventListener('click', function() {
+    saveEditedCookie(cookie, valueInput.value, valueCell, actionsCell);
+  });
+  actionsCell.appendChild(saveBtn);
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'Cancel';
+  cancelBtn.addEventListener('click', function() {
+    cancelEditing(originalValue, valueCell, actionsCell);
+  });
+  actionsCell.appendChild(cancelBtn);
+}
+
+function saveEditedCookie(cookie, newValue, valueCell, actionsCell) {
+  // Construct the url the same way deleteCookie does
+  const protocol = cookie.secure ? 'https://' : 'http://';
+  let host = cookie.domain;
+  if (host.startsWith('.')) {
+    host = host.slice(1);
+  }
+  const url = protocol + host + cookie.path;
+
+  // Build the cookie details for chrome.cookies.set
+  const details = {
+    url: url,
+    name: cookie.name,
+    value: newValue,
+    domain: cookie.domain,
+    path: cookie.path,
+    secure: cookie.secure,
+    httpOnly: cookie.httpOnly,
+    sameSite: cookie.sameSite
+  };
+
+  // Only add expirationDate if it exists
+  if (cookie.expirationDate) {
+    details.expirationDate = cookie.expirationDate;
+  }
+
+  // Only add storeId if it exists
+  if (cookie.storeId) {
+    details.storeId = cookie.storeId;
+  }
+
+  chrome.cookies.set(details, function() {
+    if (chrome.runtime.lastError) {
+      console.error('Failed to update cookie:', chrome.runtime.lastError.message);
+      alert('Failed to save cookie: ' + chrome.runtime.lastError.message);
+      // Restore the original UI
+      valueCell.textContent = cookie.value;
+      restoreActionsCell(cookie, valueCell, actionsCell);
+    } else {
+      // Success - reload the cookie list
+      loadCookies();
+    }
+  });
+}
+
+function cancelEditing(originalValue, valueCell, actionsCell) {
+  // Restore the original value display
+  valueCell.textContent = originalValue;
+
+  // Get the cookie back from the row to restore actions
+  const row = valueCell.parentElement;
+  const name = row.cells[1].textContent;
+  const domain = row.cells[3].textContent;
+
+  // Reconstruct minimal cookie object for restoreActionsCell
+  const cookie = { name: name, domain: domain };
+  restoreActionsCell(cookie, valueCell, actionsCell);
+}
+
+function restoreActionsCell(cookie, valueCell, actionsCell) {
+  actionsCell.innerHTML = '';
+
+  // Recreate delete button
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = 'Delete';
+  deleteBtn.addEventListener('click', function() {
+    deleteCookie(cookie);
+  });
+  actionsCell.appendChild(deleteBtn);
+
+  // Recreate edit button
+  const editBtn = document.createElement('button');
+  editBtn.textContent = 'Edit';
+  editBtn.addEventListener('click', function() {
+    // Get current value from the cell
+    const currentValue = valueCell.textContent || valueCell.querySelector('input')?.value || '';
+    const fullCookie = { ...cookie, value: currentValue };
+    startEditing(fullCookie, valueCell.parentElement, valueCell, actionsCell);
+  });
+  actionsCell.appendChild(editBtn);
 }
 
 function deleteCookie(cookie) {
