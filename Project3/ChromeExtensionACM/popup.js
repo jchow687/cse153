@@ -153,15 +153,6 @@ function createCookieRow(cookie, cookieListBody) {
   row.appendChild(domainCell);
 
   const actionsCell = document.createElement('td');
-
-  // Delete button
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = 'Delete';
-  deleteBtn.addEventListener('click', function() {
-    deleteCookie(cookie);
-  });
-  actionsCell.appendChild(deleteBtn);
-
   // Edit button
   const editBtn = document.createElement('button');
   editBtn.textContent = 'Edit';
@@ -264,15 +255,6 @@ function cancelEditing(originalValue, valueCell, actionsCell) {
 
 function restoreActionsCell(cookie, valueCell, actionsCell) {
   actionsCell.innerHTML = '';
-
-  // Recreate delete button
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = 'Delete';
-  deleteBtn.addEventListener('click', function() {
-    deleteCookie(cookie);
-  });
-  actionsCell.appendChild(deleteBtn);
-
   // Recreate edit button
   const editBtn = document.createElement('button');
   editBtn.textContent = 'Edit';
